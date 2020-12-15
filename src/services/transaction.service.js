@@ -30,7 +30,7 @@ module.exports = {
     const { name, balance } = await ClientModel.findById(id)
 
     if (balance < value) {
-      throw new AppError('Valor na conta é menor do que o valor desejado para sacar.')
+      throw new AppError('Valor na conta é menor do que o valor desejado para sacar.', 400)
     }
 
     const newBalance = Number(balance) - Number(value)
@@ -63,13 +63,13 @@ module.exports = {
     const destinyAccount = await ClientModel.findOne({ account_number: accountNumber })
 
     if (!destinyAccount) {
-      throw new AppError('O número da conta informado não existe.')
+      throw new AppError('O número da conta informado não existe.', 400)
     }
 
     const fromAccount = await ClientModel.findById(id)
 
     if (fromAccount.balance < value) {
-      throw new AppError('Valor na conta é menor do que o valor desejado para transferir.')
+      throw new AppError('Valor na conta é menor do que o valor desejado para transferir.', 400)
     }
 
     const newBalance = Number(fromAccount.balance) - Number(value)

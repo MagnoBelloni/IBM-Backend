@@ -31,7 +31,7 @@ module.exports = {
     const client = await ClientModel.findOne({ account_number: data.account_number })
 
     if (!client) {
-      throw new AppError('Número da conta inexistente')
+      throw new AppError('Número da conta inexistente', 400)
     }
 
     const passwordMatched = await bcrypt.compare(data.password, client.password)
@@ -39,7 +39,7 @@ module.exports = {
     if (passwordMatched) {
       return { user: client, token: createToken(client) }
     } else {
-      throw new AppError('Senha incorreta')
+      throw new AppError('Senha incorreta', 401)
     }
   },
   async profile (id) {
