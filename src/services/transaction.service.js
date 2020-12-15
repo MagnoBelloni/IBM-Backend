@@ -75,12 +75,12 @@ module.exports = {
     const newBalance = Number(fromAccount.balance) - Number(value)
 
     const Transaction = {
-      type: 'outgoing transfer',
+      type: 'outcome transfer',
       value: value,
       oldBalance: fromAccount.balance,
       newBalance,
       date: new Date(),
-      to: accountNumber
+      to: `${destinyAccount.name} - ${destinyAccount.account_number}`
     }
 
     await ClientModel.findByIdAndUpdate(id, { balance: newBalance, $push: { transactions: Transaction } }, { useFindAndModify: false })
