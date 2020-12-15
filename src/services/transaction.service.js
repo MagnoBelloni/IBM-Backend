@@ -1,5 +1,6 @@
 const ClientModel = require('../models/Client')
 const mongoose = require('mongoose')
+const AppError = require('../errors/app.error')
 
 module.exports = {
   async deposit (id, value) {
@@ -29,7 +30,7 @@ module.exports = {
     const { name, balance } = await ClientModel.findById(id)
 
     if (balance < value) {
-      throw new Error('Valor na conta é menor do que o valor desejado para sacar.')
+      throw new AppError('Valor na conta é menor do que o valor desejado para sacar.')
     }
 
     const newBalance = Number(balance) - Number(value)
@@ -62,13 +63,13 @@ module.exports = {
     const destinyAccount = await ClientModel.findOne({ account_number: accountNumber })
 
     if (!destinyAccount) {
-      throw new Error('O número da conta informado não existe.')
+      throw new AppError('O número da conta informado não existe.')
     }
 
     const fromAccount = await ClientModel.findById(id)
 
     if (fromAccount.balance < value) {
-      throw new Error('Valor na conta é menor do que o valor desejado para transferir.')
+      throw new AppError('Valor na conta é menor do que o valor desejado para transferir.')
     }
 
     const newBalance = Number(fromAccount.balance) - Number(value)
