@@ -2,9 +2,13 @@
   "name": "ibm-backend",
   "version": "1.0.0",
   "main": "./src/index.js",
+  "description": "Parte backend do teste para a IBM",
+  "repository": {
+    "url": "https://github.com/MagnoBelloni/IBM-Backend"
+  },
   "scripts": {
     "start:dev": "nodemon .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "author": "",
   "license": "ISC",
