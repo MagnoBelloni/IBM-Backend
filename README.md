@@ -27,8 +27,7 @@ npm run start:dev
 
 ### Alternativa(Docker)
 ```
-docker image build -t ibm_backend .
-docker run --name ibm_backend -p 3333:3333 -d ibm_backend
+docker-compose up
 ```
 
 

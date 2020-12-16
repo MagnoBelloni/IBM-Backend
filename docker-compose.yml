@@ -1,0 +1,17 @@
+version: '2'
+services:
+  db:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+  app:
+    build: .
+    environment:
+      HTTP_PORT: 3333
+      MONGO_URI: mongodb://db:27017/teste-ibm
+      JWT_SECRET: SECRET
+    ports:
+      - '3333:3333'
+    links:
+      - db
+    restart: on-failure
