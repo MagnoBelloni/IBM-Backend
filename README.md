@@ -6,7 +6,7 @@ A Versão Frontend pode ser acessada clicando [aqui](https://github.com/MagnoBel
 
 ## O Desafio
 
-![Preview](https://github.com/MagnoBelloni/IBM-Frontend/blob/main/Imagem-Desafio.png)
+![Preview](https://github.com/MagnoBelloni/IBM-Backend/blob/main/Imagem-Desafio.png)
 
 ## Início
 
@@ -171,7 +171,43 @@ npm run start:dev
   "__v": 0
 }
 ```
+[GET] /transaction/ :
+Busca o histórico de transações da conta, necessário token.
 
+### Request:
+- Vazio
+
+
+### Response:
+
+```
+[
+  {
+    "id": 1,
+    "type": "deposit",
+    "value": 50,
+    "oldBalance": 0,
+    "newBalance": 50,
+    "to": null,
+    "from": null,
+    "clientId": 1,
+    "createdAt": "2020-12-21T17:37:53.284Z",
+    "updatedAt": "2020-12-21T17:37:53.284Z"
+  },
+  {
+    "id": 2,
+    "type": "withdraw",
+    "value": 50,
+    "oldBalance": 50,
+    "newBalance": 0,
+    "to": null,
+    "from": null,
+    "clientId": 1,
+    "createdAt": "2020-12-21T17:39:47.887Z",
+    "updatedAt": "2020-12-21T17:39:47.887Z"
+  }
+]
+```
 
 
 [POST] /transaction/deposit: Depositar um valor na conta, , necessário token.
@@ -248,6 +284,7 @@ npm run start:dev
   }
 ]
 ```
+
 [POST] /transaction/transfer/:numero_conta : Transfere um valor para uma conta, necessário token.
 
 ### Request:
@@ -268,48 +305,6 @@ npm run start:dev
 }
 ```
 
-
-
-[GET] /transaction/ :
-Busca o histórico de transações da conta, necessário token.
-
-### Request:
-```
-{
-	"value": 50.0
-}
-```
-
-### Response:
-
-```
-[
-  {
-    "id": 1,
-    "type": "deposit",
-    "value": 50,
-    "oldBalance": 0,
-    "newBalance": 50,
-    "to": null,
-    "from": null,
-    "clientId": 1,
-    "createdAt": "2020-12-21T17:37:53.284Z",
-    "updatedAt": "2020-12-21T17:37:53.284Z"
-  },
-  {
-    "id": 2,
-    "type": "withdraw",
-    "value": 50,
-    "oldBalance": 50,
-    "newBalance": 0,
-    "to": null,
-    "from": null,
-    "clientId": 1,
-    "createdAt": "2020-12-21T17:39:47.887Z",
-    "updatedAt": "2020-12-21T17:39:47.887Z"
-  }
-]
-```
 
 
 ## Autor:
