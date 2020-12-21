@@ -1,10 +1,10 @@
-const ClientModel = require('../models/Client')
-const mongoose = require('mongoose')
+const ClientModel = require('../../models').Client
+const TransactionModel = require('../../models').Transaction
 const AppError = require('../errors/app.error')
 
 module.exports = {
   async deposit (id, value) {
-    const { name, balance } = await ClientModel.findById(id)
+    const { name, balance } = await ClientModel.findByPk(id)
 
     const newBalance = Number(balance) + Number(value)
 
@@ -13,10 +13,15 @@ module.exports = {
       value: value,
       oldBalance: balance,
       newBalance,
-      date: new Date()
+      clientId: id
     }
 
-    await ClientModel.findByIdAndUpdate(id, { balance: newBalance, $push: { transactions: transaction } }, { useFindAndModify: false })
+    await ClientModel.update(
+      { balance: newBalance },
+      { where: { id } }
+    )
+
+    await TransactionModel.create(transaction)
 
     const response = {
       oldBalance: balance,
@@ -27,7 +32,7 @@ module.exports = {
     return response
   },
   async withdraw (id, value) {
-    const { name, balance } = await ClientModel.findById(id)
+    const { name, balance } = await ClientModel.findByPk(id)
 
     if (balance < value) {
       throw new AppError('Valor na conta é menor do que o valor desejado para sacar.', 400)
@@ -40,10 +45,15 @@ module.exports = {
       value: value,
       oldBalance: balance,
       newBalance,
-      date: new Date()
+      clientId: id
     }
 
-    await ClientModel.findByIdAndUpdate(id, { balance: newBalance, $push: { transactions: transaction } }, { useFindAndModify: false })
+    await ClientModel.update(
+      { balance: newBalance },
+      { where: { id } }
+    )
+
+    await TransactionModel.create(transaction)
 
     const response = {
       oldBalance: balance,
@@ -54,19 +64,24 @@ module.exports = {
     return response
   },
   async statement (id) {
-    return await ClientModel.aggregate([
-      { $match: { _id: mongoose.Types.ObjectId(id) } },
-      { $project: { name: 0, age: 0, email: 0, password: 0, __v: 0 } }
-    ])
+    return await TransactionModel.findAll({
+      where: {
+        clientId: id
+      }
+    })
   },
   async transfer (id, accountNumber, value) {
-    const destinyAccount = await ClientModel.findOne({ account_number: accountNumber })
+    const destinyAccount = await ClientModel.findOne({
+      where: {
+        account_number: accountNumber
+      }
+    })
 
     if (!destinyAccount) {
       throw new AppError('O número da conta informado não existe.', 400)
     }
 
-    const fromAccount = await ClientModel.findById(id)
+    const fromAccount = await ClientModel.findByPk(id)
 
     if (fromAccount.balance < value) {
       throw new AppError('Valor na conta é menor do que o valor desejado para transferir.', 400)
@@ -79,11 +94,15 @@ module.exports = {
       value: value,
       oldBalance: fromAccount.balance,
       newBalance,
-      date: new Date(),
-      to: `${destinyAccount.name} - ${destinyAccount.account_number}`
+      to: `${destinyAccount.name} - ${destinyAccount.account_number}`,
+      clientId: id
     }
 
-    await ClientModel.findByIdAndUpdate(id, { balance: newBalance, $push: { transactions: Transaction } }, { useFindAndModify: false })
+    await ClientModel.update(
+      { balance: newBalance },
+      { where: { id } }
+    )
+    await TransactionModel.create(Transaction)
 
     const DestinyAccountNewBalance = Number(destinyAccount.balance) + Number(value)
 
@@ -92,11 +111,14 @@ module.exports = {
       value: value,
       oldBalance: destinyAccount.balance,
       newBalance: DestinyAccountNewBalance,
-      date: new Date(),
-      from: `${fromAccount.name} - ${fromAccount.account_number}`
+      from: `${fromAccount.name} - ${fromAccount.account_number}`,
+      clientId: destinyAccount.id
     }
-
-    await ClientModel.findByIdAndUpdate(destinyAccount._id, { balance: DestinyAccountNewBalance, $push: { transactions: DestinyAccountTransaction } }, { useFindAndModify: false })
+    await ClientModel.update(
+      { balance: DestinyAccountNewBalance },
+      { where: { id: destinyAccount.id } }
+    )
+    await TransactionModel.create(DestinyAccountTransaction)
 
     const response = {
       oldBalance: fromAccount.balance,

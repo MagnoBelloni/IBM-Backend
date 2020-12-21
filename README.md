@@ -14,22 +14,16 @@ A Versão Frontend pode ser acessada clicando [aqui](https://github.com/MagnoBel
 
 NodeJS
 NPM
-MongoDB
 
-Além disso crie um arquivo .env na raiz do projeto e coloque a chave como o exemplo do arquivo: [.env.example](https://github.com/MagnoBelloni/DeliveryMuch/blob/main/.env.example).
+Além disso crie um arquivo .env na raiz do projeto e coloque a chave como o exemplo do arquivo: [.env.example](https://github.com/MagnoBelloni/IBM-Backend/blob/main/.env.example).
 
 ### Como rodar a aplicação
 
 ```
 npm install
+npx sequelize db:migrate
 npm run start:dev
 ```
-
-### Alternativa(Docker)
-```
-docker-compose up
-```
-
 
 ## Rotas
 
@@ -180,7 +174,7 @@ docker-compose up
 
 
 
-[POST] /transaction/deposit: Depositar um valor na conta.
+[POST] /transaction/deposit: Depositar um valor na conta, , necessário token.
 
 ### Request:
 ```
@@ -199,7 +193,7 @@ docker-compose up
 }
 ```
 
-[POST] /transaction/withdraw: Sacar um valor da conta.
+[POST] /transaction/withdraw: Sacar um valor da conta, necessário token.
 
 ### Request:
 - Vazio
@@ -254,7 +248,7 @@ docker-compose up
   }
 ]
 ```
-[POST] /transaction/transfer/:numero_conta : Transfere um valor para uma conta.
+[POST] /transaction/transfer/:numero_conta : Transfere um valor para uma conta, necessário token.
 
 ### Request:
 ```
@@ -273,6 +267,50 @@ docker-compose up
   "to": "Magno - 1234567"
 }
 ```
+
+
+
+[GET] /transaction/ :
+Busca o histórico de transações da conta, necessário token.
+
+### Request:
+```
+{
+	"value": 50.0
+}
+```
+
+### Response:
+
+```
+[
+  {
+    "id": 1,
+    "type": "deposit",
+    "value": 50,
+    "oldBalance": 0,
+    "newBalance": 50,
+    "to": null,
+    "from": null,
+    "clientId": 1,
+    "createdAt": "2020-12-21T17:37:53.284Z",
+    "updatedAt": "2020-12-21T17:37:53.284Z"
+  },
+  {
+    "id": 2,
+    "type": "withdraw",
+    "value": 50,
+    "oldBalance": 50,
+    "newBalance": 0,
+    "to": null,
+    "from": null,
+    "clientId": 1,
+    "createdAt": "2020-12-21T17:39:47.887Z",
+    "updatedAt": "2020-12-21T17:39:47.887Z"
+  }
+]
+```
+
 
 ## Autor:
 

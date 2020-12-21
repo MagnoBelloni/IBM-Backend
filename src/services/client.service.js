@@ -1,4 +1,4 @@
-const ClientModel = require('../models/Client')
+const ClientModel = require('../../models').Client
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
@@ -10,25 +10,33 @@ const createToken = (payload) => {
   return jwt.sign({
     iat: moment().unix(),
     exp: moment().add(1, 'day').unix(),
-    id: payload._id
+    id: payload.id
   }, JWT_SECRET)
 }
 
 module.exports = {
   async create (data) {
-    const accountNumberAlreadyExists = await ClientModel.findOne({ account_number: data.account_number })
+    const accountNumberAlreadyExists = await ClientModel.findOne({
+      where: {
+        account_number: data.account_number
+      }
+    })
 
     if (accountNumberAlreadyExists) {
       throw new AppError('O número de conta selecionado já existe!', 400)
     }
 
     const encryptedPassword = bcrypt.hashSync(data.password, 2)
-    const client = { ...data, password: encryptedPassword }
+    const client = { ...data, password: encryptedPassword, balance: 0 }
 
     return await ClientModel.create(client)
   },
   async login (data) {
-    const client = await ClientModel.findOne({ account_number: data.account_number })
+    const client = await ClientModel.findOne({
+      where: {
+        account_number: data.account_number
+      }
+    })
 
     if (!client) {
       throw new AppError('Número da conta inexistente', 400)
@@ -43,6 +51,6 @@ module.exports = {
     }
   },
   async profile (id) {
-    return await ClientModel.findOne({ _id: id })
+    return await ClientModel.findByPk(id)
   }
 }
