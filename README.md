@@ -20,6 +20,7 @@ Além disso crie um arquivo .env na raiz do projeto e coloque a chave como o exe
 ### Como rodar a aplicação
 
 ```
+cp .env.example .env
 npm install
 npx sequelize db:migrate
 npm run start:dev
@@ -30,6 +31,7 @@ npm run start:dev
 [GET] /profile: Busca informações do usuário logado, necessário token.
 
 ### Request:
+
 - Vazio
 
 ### Response:
@@ -82,10 +84,10 @@ npm run start:dev
 }
 ```
 
-
 [POST] /login: Realiza o login na aplicação.
 
 ### Request:
+
 ```
 {
 	"account_number" : "12345",
@@ -146,6 +148,7 @@ npm run start:dev
 [POST] /client: Cria um novo usuário.
 
 ### Request:
+
 ```
 {
     "name" : "Magno",
@@ -171,12 +174,13 @@ npm run start:dev
   "__v": 0
 }
 ```
+
 [GET] /transaction/ :
 Busca o histórico de transações da conta, necessário token.
 
 ### Request:
-- Vazio
 
+- Vazio
 
 ### Response:
 
@@ -209,10 +213,10 @@ Busca o histórico de transações da conta, necessário token.
 ]
 ```
 
-
 [POST] /transaction/deposit: Depositar um valor na conta, , necessário token.
 
 ### Request:
+
 ```
 {
 	"value": 50.0
@@ -232,6 +236,7 @@ Busca o histórico de transações da conta, necessário token.
 [POST] /transaction/withdraw: Sacar um valor da conta, necessário token.
 
 ### Request:
+
 - Vazio
 
 ### Response:
@@ -288,6 +293,7 @@ Busca o histórico de transações da conta, necessário token.
 [POST] /transaction/transfer/:numero_conta : Transfere um valor para uma conta, necessário token.
 
 ### Request:
+
 ```
 {
 	"value": 50.0
@@ -304,8 +310,6 @@ Busca o histórico de transações da conta, necessário token.
   "to": "Magno - 1234567"
 }
 ```
-
-
 
 ## Autor:
 
